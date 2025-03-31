@@ -1,0 +1,215 @@
+<Window
+	x:Class="HearthHelper.AccountPopupMerc" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:HearthHelper"
+	  Name="AccountPopup" ResizeMode="NoResize" Title="佣兵配置" Height="360" Width="260">
+    <StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Margin="10,0,0,0"
+				Content="佣兵对战模式：" VerticalAlignment="Center" Width="Auto" />
+            <ComboBox Grid.Row="0" Grid.Column="1" Width="120" Height="20"
+				VerticalContentAlignment="Center" HorizontalAlignment="Stretch"
+				SelectedIndex="{Binding MercRule}">
+                <ComboBoxItem>刷全图</ComboBoxItem>
+                <ComboBoxItem>刷碎片</ComboBoxItem>
+                <ComboBoxItem>自动解锁地图</ComboBoxItem>
+                <ComboBoxItem>自动佣兵任务</ComboBoxItem>
+                <ComboBoxItem>自动主线任务</ComboBoxItem>
+                <ComboBoxItem>自动解锁装备</ComboBoxItem>
+                <ComboBoxItem>真人PVP</ComboBoxItem>
+                <ComboBoxItem>挂机收菜</ComboBoxItem>
+            </ComboBox>
+
+            <Label Grid.Row="1" Grid.Column="0" Margin="10,0,0,0"
+				Content="佣兵对战策略：" VerticalAlignment="Center" Width="Auto" />
+            <ComboBox Grid.Row="1" Grid.Column="1" Width="120" Height="20"
+				VerticalContentAlignment="Center" HorizontalAlignment="Stretch"
+				SelectedIndex="{Binding MercBehavior}">
+                <ComboBoxItem>PVE通用</ComboBoxItem>
+                <ComboBoxItem>PVP通用</ComboBoxItem>
+            </ComboBox>
+
+            <Label Grid.Row="2" Grid.Column="0" Margin="10,0,0,0"
+				Content="佣兵对战队伍：" VerticalAlignment="Center" Width="Auto" />
+            <TextBox Grid.Row="2" Grid.Column="1" Width="120" Height="20"
+				VerticalContentAlignment="Center" HorizontalAlignment="Stretch"
+				IsReadOnly="False" Text="{Binding MercTeam}" />
+        </Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Margin="10,0,0,0"
+				Content="佣兵对战地图：" VerticalAlignment="Center" Width="Auto" />
+            <TextBox Grid.Row="0" Grid.Column="1" Width="40" Height="20"
+				VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+				IsReadOnly="False" Text="{Binding MercMap}" />
+            <Label Grid.Row="0" Grid.Column="2" Margin="0,0,0,0"
+				Content="例2-5，H1-1" VerticalAlignment="Center" Width="Auto" />
+
+            <Label Grid.Row="1" Grid.Column="0" Margin="10,0,0,0"
+				Content="佣兵收菜间隔：" VerticalAlignment="Center" Width="Auto" />
+            <TextBox Grid.Row="1" Grid.Column="1" Width="40" Height="20"
+				VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                InputMethod.IsInputMethodEnabled="False"
+                MaxLines="1" MaxLength="2" ContextMenu="{x:Null}"
+                PreviewTextInput="TextBox_PreviewTextInput"
+				IsReadOnly="False" Text="{Binding MercInterval}">
+                <UIElement.CommandBindings>
+                    <CommandBinding
+					    Command="ApplicationCommands.Paste"
+					    CanExecute="CommandBinding_CanExecute" />
+                    <CommandBinding
+					    Command="ApplicationCommands.Cut"
+					    CanExecute="CommandBinding_CanExecute" />
+                    <CommandBinding
+					    Command="ApplicationCommands.Copy"
+					    CanExecute="CommandBinding_CanExecute" />
+                </UIElement.CommandBindings>
+            </TextBox>
+            <Label Grid.Row="1" Grid.Column="2" Margin="0,0,0,0"
+				Content="建议20-25分钟" VerticalAlignment="Center" Width="Auto" />
+
+            <Label Grid.Row="2" Grid.Column="0" Margin="10,0,0,0"
+				Content="PVP自动投降：" VerticalAlignment="Center" Width="Auto" />
+            <CheckBox Grid.Row="2" Grid.Column="1" Margin="0,0,0,0"
+				VerticalAlignment="Center" IsChecked="{Binding MercConcede}" />
+            <Label Grid.Row="2" Grid.Column="2" Margin="0,0,0,0"
+				Content="12000就跑路" VerticalAlignment="Center" Width="Auto" />
+
+            <Label Grid.Row="3" Grid.Column="0" Margin="10,0,0,0"
+				Content="自动制作佣兵：" VerticalAlignment="Center" Width="Auto" />
+            <CheckBox Grid.Row="3" Grid.Column="1" Margin="0,0,0,0"
+				VerticalAlignment="Center" IsChecked="{Binding MercCraft}" />
+            <Label Grid.Row="3" Grid.Column="2" Margin="0,0,0,0"
+				Content="强烈推荐勾选" VerticalAlignment="Center" Width="Auto" />
+
+            <Label Grid.Row="4" Grid.Column="0" Margin="10,0,0,0"
+				Content="自动升级技能：" VerticalAlignment="Center" Width="Auto" />
+            <CheckBox Grid.Row="4" Grid.Column="1" Margin="0,0,0,0"
+				VerticalAlignment="Center" IsChecked="{Binding MercUpdate}" />
+            <Label Grid.Row="4" Grid.Column="2" Margin="0,0,0,0"
+				Content="包含技能和装备" VerticalAlignment="Center" Width="Auto" />
+        </Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Margin="10,0,0,0"
+				Content="佣兵挂机时间：" VerticalAlignment="Center" Width="Auto" />
+
+            <TextBox Grid.Row="0" Grid.Column="1" Width="20" Height="20"
+				VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                InputMethod.IsInputMethodEnabled="False"
+                MaxLines="1" MaxLength="2" ContextMenu="{x:Null}"
+                PreviewTextInput="TextBox_PreviewTextInput"
+				IsReadOnly="False" Text="{Binding StartTimeHour}">
+                <UIElement.CommandBindings>
+                    <CommandBinding
+					    Command="ApplicationCommands.Paste"
+					    CanExecute="CommandBinding_CanExecute" />
+                    <CommandBinding
+					    Command="ApplicationCommands.Cut"
+					    CanExecute="CommandBinding_CanExecute" />
+                    <CommandBinding
+					    Command="ApplicationCommands.Copy"
+					    CanExecute="CommandBinding_CanExecute" />
+                </UIElement.CommandBindings>
+            </TextBox>
+            <Label Grid.Row="0" Grid.Column="2"
+				Content=":" VerticalAlignment="Center" Width="Auto" />
+            <TextBox Grid.Row="0" Grid.Column="3" Width="20" Height="20"
+				VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                InputMethod.IsInputMethodEnabled="False"
+                MaxLines="1" MaxLength="2" ContextMenu="{x:Null}"
+                PreviewTextInput="TextBox_PreviewTextInput"
+				IsReadOnly="False" Text="{Binding StartTimeMin}">
+                <UIElement.CommandBindings>
+                    <CommandBinding
+						Command="ApplicationCommands.Paste"
+						CanExecute="CommandBinding_CanExecute" />
+                    <CommandBinding
+						Command="ApplicationCommands.Cut"
+						CanExecute="CommandBinding_CanExecute" />
+                    <CommandBinding
+						Command="ApplicationCommands.Copy"
+						CanExecute="CommandBinding_CanExecute" />
+                </UIElement.CommandBindings>
+            </TextBox>
+ 
+            <Label Grid.Row="0" Grid.Column="4"
+				Content="-" VerticalAlignment="Center" Width="Auto" />
+
+            <TextBox Grid.Row="0" Grid.Column="5" Width="20" Height="20"
+				VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                InputMethod.IsInputMethodEnabled="False"
+                MaxLines="1" MaxLength="2" ContextMenu="{x:Null}"
+                PreviewTextInput="TextBox_PreviewTextInput"
+				IsReadOnly="False" Text="{Binding EndTimeHour}">
+                <UIElement.CommandBindings>
+                    <CommandBinding
+					    Command="ApplicationCommands.Paste"
+					    CanExecute="CommandBinding_CanExecute" />
+                    <CommandBinding
+					    Command="ApplicationCommands.Cut"
+					    CanExecute="CommandBinding_CanExecute" />
+                    <CommandBinding
+					    Command="ApplicationCommands.Copy"
+					    CanExecute="CommandBinding_CanExecute" />
+                </UIElement.CommandBindings>
+            </TextBox>
+            <Label Grid.Row="0" Grid.Column="6"
+				Content=":" VerticalAlignment="Center" Width="Auto" />
+            <TextBox Grid.Row="0" Grid.Column="7" Width="20" Height="20"
+				VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                InputMethod.IsInputMethodEnabled="False"
+                MaxLines="1" MaxLength="2" ContextMenu="{x:Null}"
+                PreviewTextInput="TextBox_PreviewTextInput"
+				IsReadOnly="False" Text="{Binding EndTimeMin}">
+                <UIElement.CommandBindings>
+                    <CommandBinding
+						Command="ApplicationCommands.Paste"
+						CanExecute="CommandBinding_CanExecute" />
+                    <CommandBinding
+						Command="ApplicationCommands.Cut"
+						CanExecute="CommandBinding_CanExecute" />
+                    <CommandBinding
+						Command="ApplicationCommands.Copy"
+						CanExecute="CommandBinding_CanExecute" />
+                </UIElement.CommandBindings>
+            </TextBox>
+        </Grid>
+        <Button Name="ConfigAccountButton1" Content="保存" 
+				HorizontalAlignment="Stretch" VerticalAlignment="Top"
+				Margin="10,12,10,0" Width="210" Height="23" Click="ConfigItemButtonSave_Click" />
+    </StackPanel>
+</Window>

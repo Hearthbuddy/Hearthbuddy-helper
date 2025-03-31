@@ -1,0 +1,34 @@
+<Window
+	x:Class="HearthHelper.AccountPopupAdd" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:HearthHelper"
+	  Name="AccountPopup" ResizeMode="NoResize" Title="账号添加（战网客户端输入密码）" Height="150" Width="260">
+    <StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" Margin="10,0,0,0"
+				Content="注：请务必勾选【始终让我保持登录状态】" VerticalAlignment="Center" Width="Auto" />
+        </Grid>
+        <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Margin="10,0,0,0"
+				Content="邮箱/手机：" VerticalAlignment="Center" Width="Auto" />
+            <TextBox Grid.Row="0" Grid.Column="1" Width="140" Height="20"
+                Name="ConfigAccountName" IsReadOnly="False"
+				VerticalContentAlignment="Center" HorizontalAlignment="Stretch"/>
+        </Grid>
+        <Button Name="ConfigAccountButtonSave" Content="立即添加" 
+				HorizontalAlignment="Stretch" VerticalAlignment="Top"
+				Margin="10,12,10,0" Width="210" Height="23" Click="ConfigItemButtonSave_Click" />
+    </StackPanel>
+</Window>

@@ -1,0 +1,76 @@
+<Window
+	x:Class="HearthHelper.AccountPopupList" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:HearthHelper"
+	  Name="AccountPopup" ResizeMode="NoResize" Title="账号配置" Height="325" Width="500">
+    <StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label	Grid.Row="0" Grid.Column="0" Margin="15,5,0,0" Width="190" Height="30" 
+                    VerticalAlignment="Center" VerticalContentAlignment="Center"
+				    HorizontalAlignment="Center" Content="{Binding EmailShow}" />
+        </Grid>
+        <Grid>
+            <GroupBox
+			    Header="当前账号挂机时间段"
+			    Height="240"
+			    VerticalAlignment="Top"
+			    Margin="10,5,10,0">
+                <StackPanel
+				    Orientation="Vertical"
+				    Margin="0,4,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Name="ConfigAccountButton0" Content="添加天梯配置" 
+				            HorizontalAlignment="Center" VerticalAlignment="Center"
+				            Margin="171,0,0,10" Width="80" Height="20" Click="ConfigItemButtonAdd_Click0" />
+                        <Button Name="ConfigAccountButton1" Content="添加佣兵配置"  IsEnabled="False"
+				            HorizontalAlignment="Center" VerticalAlignment="Center"
+				            Margin="5,0,0,10" Width="80" Height="20" Click="ConfigItemButtonAdd_Click1" />
+                        <Button Name="ConfigAccountButton2" Content="添加战旗配置" IsEnabled="True" 
+				            HorizontalAlignment="Center" VerticalAlignment="Center"
+				            Margin="5,0,0,10" Width="80" Height="20" Click="ConfigItemButtonAdd_Click2" />
+                    </StackPanel>
+                    <StackPanel
+					    Orientation="Horizontal">
+                        <ListBox
+						    Name="ItemListBox"
+						    HorizontalContentAlignment="Stretch"
+						    Height="180"
+						    VerticalContentAlignment="Top"
+						    ScrollViewer.VerticalScrollBarVisibility="Visible"
+						    Margin="0,0,0,0"
+						    Width="450">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel
+									    Orientation="Horizontal">
+                                        <CheckBox
+                                            Width="345"
+                                            VerticalContentAlignment="Center"
+										    Content="{Binding Path=Info}" 
+                                            IsChecked="{Binding Path=Enable}" />
+                                        <Button
+										    Name="ConfigAccountButton0"
+										    Content="配置"
+										    Width="35" Height="20"
+										    Tag="{Binding}"
+                                            Click="ConfigItemButtonModify_Click"/>
+                                        <Button
+										    Name="ConfigAccountButton1"
+										    Content="删除"
+										    Width="35" Height="20"
+										    Tag="{Binding}"
+                                            Click="ConfigItemButtonDelete_Click"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+        </Grid>
+    </StackPanel>
+</Window>

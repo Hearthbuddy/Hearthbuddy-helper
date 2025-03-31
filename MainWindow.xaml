@@ -1,0 +1,550 @@
+<Window
+	x:Class="HearthHelper.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:HearthHelper"
+	Title="炉石兄弟中控"
+	Height="860"
+	Width="415"
+	ResizeMode="CanMinimize"
+	Loaded="Window_Loaded"
+	Closed="Window_Closed">
+    <Grid>
+        <GroupBox
+			Header="路径配置"
+			Height="115"
+			VerticalAlignment="Top"
+			Margin="10,10,10,0">
+			<StackPanel
+				Orientation="Vertical"
+				Margin="0,4,0,0">
+				<StackPanel
+					Orientation="Horizontal">
+					<Label
+						Content="战网路径：" />
+					<TextBox
+						Name="BattleNetPathTextBox"
+						Width="250"
+						VerticalContentAlignment="Center"
+						IsReadOnly="True" />
+					<Button
+						Name="SelectBattleNetFileButton"
+						Content="选择"
+						Margin="5,0,0,0"
+						Width="35"
+						Click="SelectBattleNetFileButton_Click" />
+				</StackPanel>
+                <StackPanel
+					Orientation="Horizontal"
+					Margin="0,4,0,0">
+                    <Label
+						Content="炉石路径：" />
+                    <TextBox
+						Name="HearthstonePathTextBox"
+						Width="250"
+						VerticalContentAlignment="Center"
+						IsReadOnly="True" />
+                    <Button
+						Name="SelectHearthstoneFileButton"
+						Content="选择"
+						Margin="5,0,0,0"
+						Width="35"
+						Click="SelectHearthstoneFileButton_Click" />
+                </StackPanel>
+                <StackPanel
+					Orientation="Horizontal"
+					Margin="0,4,0,0">
+					<Label
+						Content="兄弟路径：" />
+					<TextBox
+						Name="HearthbuddyPathTextBox"
+						Width="250"
+						VerticalContentAlignment="Center"
+						IsReadOnly="True"
+                        IsEnabled="false"/>
+					<Button
+						Name="SelectHearthbuddyFileButton"
+						Content="选择"
+						Margin="5,0,0,0"
+						Width="35" IsEnabled="false"
+						Click="SelectHearthbuddyFileButton_Click" />
+				</StackPanel>
+			</StackPanel>
+		</GroupBox>
+		<GroupBox
+			Header="账号配置（必须先配置账号，勾选后才能挂机，账号最大保留5个）"
+			Height="138"
+			VerticalAlignment="Top"
+			Margin="10,130,10,0">
+			<StackPanel
+				Orientation="Vertical"
+				Margin="0,5,0,0">
+                <StackPanel
+					Orientation="Horizontal">
+                <Button
+					Name="AddAccountButton"
+					Content="批量注册学习账号"
+					VerticalAlignment="Center"
+					Margin="10,0,0,0"
+					Width="115"
+					IsEnabled="True" Click="ConfigAddAccountButton_Click" />
+                <Button
+					Name="ConfigAccountButtonView"
+					Content="查看挂机账号统计信息"
+                    VerticalAlignment="Center"
+					Margin="10,0,0,0"
+					Width="135"
+					IsEnabled="False" Click="ConfigAccountButtonView_Click" />
+                <Button
+					Name="ConfigAccountButtonAdd"
+					Content="添加账号"
+                    VerticalAlignment="Center"
+					Margin="10,0,0,0"
+					Width="80"
+					Click="ConfigAccountButtonAdd_Click" />
+                </StackPanel>
+                <StackPanel
+					Orientation="Horizontal">
+                    <ListBox
+						Name="AccountListBox"
+						HorizontalContentAlignment="Stretch"
+						Height="80"
+						VerticalContentAlignment="Top"
+						ScrollViewer.VerticalScrollBarVisibility="Visible"
+						Margin="0,5,0,0"
+						Width="365">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<StackPanel
+									Orientation="Horizontal">
+                                    <CheckBox
+										Width="250"
+										VerticalContentAlignment="Center"
+										Content="{Binding Path=EmailShow}"
+										IsChecked="{Binding Path=Selected}" />
+                                    <Button
+										Name="ConfigAccountButtonModify"
+										Content="配置"
+										Width="40"
+										Tag="{Binding}"
+                                        Click="ConfigAccountButtonModify_Click"/>
+                                    <Button
+										Name="ConfigAccountButtonDelete"
+										Content="删除"
+										Width="40"
+										Tag="{Binding}"
+                                        Click="ConfigAccountButtonDelete_Click"/>
+								</StackPanel>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ListBox>
+				</StackPanel>
+			</StackPanel>
+		</GroupBox>
+        <GroupBox
+			Header="其他配置（尽量使用默认参数，避免配置错误）"
+			Height="205"
+			VerticalAlignment="Top"
+			Margin="10,270,10,0">
+            <Grid>
+                <StackPanel
+					Orientation="Vertical">
+                    <StackPanel
+						Orientation="Horizontal">
+                        <Label
+							Content="战网启动 " />
+                        <TextBox
+							Name="BNHSIntervalTextBox"
+							Width="30"
+							Height="20"
+                            HorizontalContentAlignment="Center"
+							VerticalContentAlignment="Center"
+							InputMethod.IsInputMethodEnabled="False"
+							MaxLength="3"
+							MaxLines="1"
+							ContextMenu="{x:Null}"
+							PreviewTextInput="TextBox_PreviewTextInput">
+                            <UIElement.CommandBindings>
+                                <CommandBinding
+									Command="ApplicationCommands.Paste"
+									CanExecute="CommandBinding_CanExecute" />
+                                <CommandBinding
+									Command="ApplicationCommands.Cut"
+									CanExecute="CommandBinding_CanExecute" />
+                                <CommandBinding
+									Command="ApplicationCommands.Copy"
+									CanExecute="CommandBinding_CanExecute" />
+                            </UIElement.CommandBindings>
+                        </TextBox>
+                        <Label
+							Content="秒后开始启动炉石" />
+                        <CheckBox
+                            Name="NeedCloseBattleCheckBox"
+                            Margin="5,0,0,0"
+							VerticalAlignment="Center"
+							Content="炉石启动后关闭战网进程"
+							IsChecked="True" />
+                    </StackPanel>
+                    <StackPanel
+						Orientation="Horizontal"
+						VerticalAlignment="Center">
+                        <Label
+							Content="炉石启动 " />
+                        <TextBox
+							Name="HSHBIntervalTextBox"
+							Width="30"
+							Height="20"
+                            HorizontalContentAlignment="Center"
+							VerticalContentAlignment="Center"
+							InputMethod.IsInputMethodEnabled="False"
+							MaxLength="3"
+							MaxLines="1"
+							ContextMenu="{x:Null}"
+							PreviewTextInput="TextBox_PreviewTextInput">
+                            <UIElement.CommandBindings>
+                                <CommandBinding
+									Command="ApplicationCommands.Paste"
+									CanExecute="CommandBinding_CanExecute" />
+                                <CommandBinding
+									Command="ApplicationCommands.Cut"
+									CanExecute="CommandBinding_CanExecute" />
+                                <CommandBinding
+									Command="ApplicationCommands.Copy"
+									CanExecute="CommandBinding_CanExecute" />
+                            </UIElement.CommandBindings>
+                        </TextBox>
+                        <Label
+							Content="秒后开始启动脚本" />
+                        <CheckBox
+                            Name="NeedMultStoneCheckBox"
+                            Margin="5,0,0,0"
+							VerticalAlignment="Center"
+							Content="多开(启动前关炉石和战网)"
+							IsChecked="false" />
+                    </StackPanel>
+                    <StackPanel
+						Orientation="Horizontal"
+						VerticalAlignment="Center">
+                        <Label
+							Content="检测频率 " />
+                        <TextBox
+							Name="CheckIntervalTextBox"
+							Margin="0,0,0,0"
+							Width="30"
+							Height="20"
+                            HorizontalContentAlignment="Center"
+							VerticalContentAlignment="Center"
+							InputMethod.IsInputMethodEnabled="False"
+							MaxLines="1"
+							MaxLength="3"
+							ContextMenu="{x:Null}"
+							PreviewTextInput="TextBox_PreviewTextInput">
+                            <UIElement.CommandBindings>
+                                <CommandBinding
+									Command="ApplicationCommands.Paste"
+									CanExecute="CommandBinding_CanExecute" />
+                                <CommandBinding
+									Command="ApplicationCommands.Cut"
+									CanExecute="CommandBinding_CanExecute" />
+                                <CommandBinding
+									Command="ApplicationCommands.Copy"
+									CanExecute="CommandBinding_CanExecute" />
+                            </UIElement.CommandBindings>
+                        </TextBox>
+                        <Label
+							Content="分钟    最大异常重启次数(凌晨重置)" />
+                        <Label
+                            Name="TodayRebootCntLabel"
+							Content="0/" />
+                        <TextBox
+							Name="RebootMaxCntTextBox"
+							Margin="0,0,0,0"
+							Width="30"
+							Height="20"
+                            HorizontalContentAlignment="Center"
+							VerticalContentAlignment="Center"
+							InputMethod.IsInputMethodEnabled="False"
+							MaxLines="1"
+							MaxLength="3"
+							ContextMenu="{x:Null}"
+							PreviewTextInput="TextBox_PreviewTextInput">
+                            <UIElement.CommandBindings>
+                                <CommandBinding
+									Command="ApplicationCommands.Paste"
+									CanExecute="CommandBinding_CanExecute" />
+                                <CommandBinding
+									Command="ApplicationCommands.Cut"
+									CanExecute="CommandBinding_CanExecute" />
+                                <CommandBinding
+									Command="ApplicationCommands.Copy"
+									CanExecute="CommandBinding_CanExecute" />
+                            </UIElement.CommandBindings>
+                        </TextBox>
+                        <Label
+							Content="次" />
+                    </StackPanel>
+                    <StackPanel
+						Orientation="Horizontal"
+						VerticalAlignment="Center">
+                        <Label
+							Content="操作系统 " />
+                        <ComboBox Name="SystemVersionComboBox" Width="80" Height="20"
+							VerticalContentAlignment="Center" HorizontalAlignment="Stretch">
+                            <ComboBoxItem>Win10</ComboBoxItem>
+                            <ComboBoxItem>Win7</ComboBoxItem>
+                        </ComboBox>
+                        <Label Grid.Row="0" Grid.Column="0" Margin="20,0,0,0"
+							Content="炉石窗口宽高" VerticalAlignment="Center" Width="Auto" />
+                        <TextBox Name="WindowWidthTextBox" Width="50" Height="20" Margin="0,0,0,0"
+							VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                        <Label Grid.Row="0" Grid.Column="0" Margin="0,0,0,0"
+							Content="X" VerticalAlignment="Center" Width="Auto" />
+                        <TextBox Name="WindowHeightTextBox" Width="50" Height="20" Margin="0,0,0,0"
+							VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel
+						Orientation="Horizontal"
+						VerticalAlignment="Center">
+                        <Label
+							Content="Token/BarkURL " />
+                        <TextBox
+							Name="PushPlusTokenTextBox"
+							Width="180"
+							Height="20"
+                            HorizontalContentAlignment="Center"
+							VerticalContentAlignment="Center"
+							InputMethod.IsInputMethodEnabled="False"
+							MaxLength="64"
+							MaxLines="1"
+							ContextMenu="{x:Null}">
+                        </TextBox>
+                        <Button
+							Name="GetPushTokenButton"
+							Content="获取Token"
+                            VerticalAlignment="Center"
+							Margin="12,0,0,0"
+							Width="70"
+							Click="GetPushTokenButton_Click" />
+                    </StackPanel>
+                    <StackPanel
+						Orientation="Horizontal"
+						VerticalAlignment="Center">
+                        <CheckBox
+                            Name="NeedPushMessageCheckBox"
+                            Margin="5,0,0,0"
+							VerticalAlignment="Center"
+							Content="开启微信推送 "
+							IsChecked="False" />
+                        <CheckBox
+                            Name="NeedPushNormalCheckBox"
+                            Margin="10,0,0,0"
+							VerticalAlignment="Center"
+							Content="并每 "
+							IsChecked="False" />
+                        <TextBox
+							Name="PushNormalIntervalTextBox"
+							Width="25"
+							Height="20"
+                            HorizontalContentAlignment="Center"
+							VerticalContentAlignment="Center"
+							InputMethod.IsInputMethodEnabled="False"
+							MaxLength="3"
+							MaxLines="1"
+							ContextMenu="{x:Null}"
+							PreviewTextInput="TextBox_PreviewTextInput">
+                            <UIElement.CommandBindings>
+                                <CommandBinding
+									Command="ApplicationCommands.Paste"
+									CanExecute="CommandBinding_CanExecute" />
+                                <CommandBinding
+									Command="ApplicationCommands.Cut"
+									CanExecute="CommandBinding_CanExecute" />
+                                <CommandBinding
+									Command="ApplicationCommands.Copy"
+									CanExecute="CommandBinding_CanExecute" />
+                            </UIElement.CommandBindings>
+                        </TextBox>
+                        <Label
+							Content="小时推送正常状态消息 " />
+                        <Button
+							Name="TestPushMessageButton"
+							Content="测试"
+                            VerticalAlignment="Center"
+							Margin="4,0,0,0"
+							Width="40"
+							Click="TestPushMessageButton_Click" />
+                    </StackPanel>
+                    <StackPanel
+						Orientation="Horizontal"
+						VerticalAlignment="Center">
+                        <Label
+                            Margin="0,5,0,0"
+							Content="补丁:" />
+                        <Button
+							Name="PatchStoneButton0"
+							Content="备份文件"
+							VerticalAlignment="Center"
+							Margin="1,5,0,0"
+							Width="52"
+							ToolTipService.ToolTip="备份Assembly-CSharp.dll和libacsdk_x86.dll文件"
+							Click="PatchStoneButton0_Click" />
+                        <Button
+							Name="PatchStoneButton1"
+							Content="最小化"
+							VerticalAlignment="Center"
+							Margin="3,5,0,0"
+							Width="40"
+							ToolTipService.ToolTip="解除炉石窗口最小化限制"
+							Click="PatchStoneButton1_Click" />
+                        <Button
+							Name="PatchStoneButton2"
+							Content="反作弊"
+							VerticalAlignment="Center"
+							Margin="3,5,0,0"
+							Width="40"
+							ToolTipService.ToolTip="屏蔽炉石检测作弊插件启动"
+							Click="PatchStoneButton2_Click" />
+                        <Button
+							Name="PatchStoneButton3"
+							Content="去广告"
+							VerticalAlignment="Center"
+							Margin="3,5,0,0"
+							Width="40"
+							ToolTipService.ToolTip="去除炉石经常推送的商城广告"
+							Click="PatchStoneButton3_Click" />
+                        <Button
+							Name="PatchStoneButton4"
+							Content="免开门"
+							VerticalAlignment="Center"
+							Margin="3,5,0,0"
+							Width="40"
+							ToolTipService.ToolTip="免除中国特有的炉石开门（使用插件版本佣兵时，禁止打此补丁）"
+							Click="PatchStoneButton4_Click"
+							IsEnabled="True" />
+                        <Button
+							Name="PatchStoneButton5"
+							Content="去特效"
+							VerticalAlignment="Center"
+							Margin="3,5,0,0"
+							Width="40"
+							ToolTipService.ToolTip="去除炉石金卡特效，提高云服务器挂机性能"
+							Click="PatchStoneButton5_Click" />
+                        <Button
+							Name="PatchStoneButton6"
+							Content="还原文件"
+							VerticalAlignment="Center"
+							Margin="3,5,0,0"
+							Width="52"
+							ToolTipService.ToolTip="还原Assembly-CSharp.dll和libacsdk_x86.dll文件"
+							Click="PatchStoneButton6_Click" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+        <GroupBox
+			Header="HsMod配置（当前不开放，与补丁冲突，补丁和HsMod二选一）"
+			Height="75"
+			VerticalAlignment="Top"
+			Margin="10,480,10,0">
+            <StackPanel
+				Orientation="Vertical">
+                <StackPanel
+					Orientation="Horizontal"
+					VerticalAlignment="Center">
+					<CheckBox 
+                        Name="EnableHsModCheckBox"
+						Margin="5,0,0,0"
+                        VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+						Content="启用HsMod"
+						IsEnabled="False" IsChecked="False" />
+					<Label 
+						Margin="10,0,0,0"
+						VerticalAlignment="Center"
+						Content="端口" />
+					<TextBox
+                        Name="HsModPortTextBox"
+						Margin="5,0,0,0"
+                        VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Width="50" Height="20"
+						IsEnabled="False" VerticalAlignment="Center"/>
+                    <Button
+						Name="CopyBepButton"
+						Content="安装HsMod"
+						VerticalAlignment="Center"
+						Margin="10,0,0,0"
+						Width="75"
+						IsEnabled="False" Click="CopyBepButton_Click" />
+                    <Button
+						Name="DeleteBepButton"
+						Content="卸载HsMod"
+						VerticalAlignment="Center"
+						Margin="10,0,0,0"
+						Width="75"
+						IsEnabled="False" Click="DeleteBepButton_Click" />
+                </StackPanel>
+                <StackPanel
+					Orientation="Horizontal"
+					VerticalAlignment="Center">
+                    <CheckBox 
+                        Name="EnableTimeGearCheckBox"
+                        Margin="5,0,0,0" Width="70" Height="20"
+						VerticalAlignment="Center" VerticalContentAlignment="Center"
+						IsEnabled="False" HorizontalAlignment="Center" Content="启用齿轮" IsChecked="False" />
+                    <Label Margin="5,0,0,0" Width="82" 
+						VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                        Content="非战斗时倍速" />
+                    <TextBox 
+                        Name="NoFightTimeTextBox"
+                        Margin="1,0,0,0" Width="25" Height="20"
+						IsEnabled="False" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <Label Margin="3,0,0,0" Width="57"
+						VerticalAlignment="Center" VerticalContentAlignment="Center"
+						HorizontalAlignment="Center" Content="PVE倍速" />
+                    <TextBox 
+                        Name="PveFightTimeTextBox"
+                        Margin="1,0,0,0" Width="25" Height="20"
+						IsEnabled="False" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <Label Margin="3,0,0,0" Width="57"
+						VerticalAlignment="Center" VerticalContentAlignment="Center"
+						HorizontalAlignment="Center" Content="PVP倍速" />
+                    <TextBox 
+                        Name="PvpFightTimeTextBox"
+                        Margin="1,0,0,0" Width="25" Height="20"
+						IsEnabled="False" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+        <Button
+			Name="StartOrStopButton"
+			Content="开始运行"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Top"
+			Margin="10,560,10,0"
+			Height="26"
+			Click="StartOrStopButton_Click" />
+        <StackPanel>
+			<TextBox
+				Name="LogTextBox"
+				TextWrapping="Wrap"
+				Margin="10,592,10,10"
+				Height="200"
+				AcceptsReturn="True"
+				IsReadOnly="True"
+				VerticalScrollBarVisibility="Auto"
+				VerticalAlignment="Stretch" />
+        </StackPanel>
+        <StackPanel>
+            <TextBlock Name="timeTextBlock1" 
+				Margin="10,800,10,10"
+                Width="230"
+				Text="运行时间"
+                HorizontalAlignment="Left"
+				VerticalAlignment="Center"/>
+            <TextBlock Name="timeTextBlock2" 
+				Margin="200,-25,10,10"
+				Width="150"
+                Text="日期"
+                TextAlignment="Right"
+				HorizontalAlignment="Right"
+				VerticalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Window>
