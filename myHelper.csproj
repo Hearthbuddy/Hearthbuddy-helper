@@ -117,6 +117,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="AccountPopupChange.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="AccountPopupList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -139,6 +143,7 @@
     <Compile Include="AccountItemWhole.cs" />
     <Compile Include="AccountPopupAdd.cs" />
     <Compile Include="AccountPopupBaconcs.cs" />
+    <Compile Include="AccountPopupChange.cs" />
     <Compile Include="AccountPopupList.cs" />
     <Compile Include="AccountPopupMerc.cs" />
     <Compile Include="AccountPopupNormal.cs" />
@@ -148,6 +153,7 @@
     <Compile Include="UtilsCom.cs" />
     <Compile Include="UtilsConfig.cs" />
     <Compile Include="UtilsCopy.cs" />
+    <Compile Include="UtilsHsModChange.cs" />
     <Compile Include="UtilsMonitor.cs" />
     <Compile Include="UtilsPath.cs" />
     <Compile Include="UtilsPatch.cs" />

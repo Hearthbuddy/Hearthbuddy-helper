@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Net;
 using System.Xml;
 using System.Windows.Shapes;
@@ -174,39 +175,36 @@ namespace HearthHelper
             }
             set { HsModPortTextBox.Text = value.ToString(); }
         }
-        public bool EnableTimeGear
+        public bool EnableGMMessageShow
         {
-            get { return (bool)EnableTimeGearCheckBox.IsChecked; }
-            set { EnableTimeGearCheckBox.IsChecked = value; }
-        }
-        public int NoFightTime
-        {
-            get
-            {
-                int x; return int.TryParse(NoFightTimeTextBox.Text, out x) ?
-                    x : UtilsConfig.DefaultNoFightTime;
-            }
-            set { NoFightTimeTextBox.Text = value.ToString(); }
-        }
-        public int PveFightTime
-        {
-            get
-            {
-                int x; return int.TryParse(PveFightTimeTextBox.Text, out x) ?
-                    x : UtilsConfig.DefaultPveFightTime;
-            }
-            set { PveFightTimeTextBox.Text = value.ToString(); }
-        }
-        public int PvpFightTime
-        {
-            get
-            {
-                int x; return int.TryParse(PvpFightTimeTextBox.Text, out x) ?
-                    x : UtilsConfig.DefaultPvpFightTime;
-            }
-            set { PvpFightTimeTextBox.Text = value.ToString(); }
+            get { return (bool)EnableGMMessageShowCheckBox.IsChecked; }
+            set { EnableGMMessageShowCheckBox.IsChecked = value; }
         }
 
+        public bool EnableEnemyEmote
+        {
+	        get { return (bool)EnableEnemyEmoteCheckBox.IsChecked; }
+	        set { EnableEnemyEmoteCheckBox.IsChecked = value; }
+        }
+        
+        public bool EnableQuickMode
+        {
+	        get { return (bool)EnableQuickModeCheckBox.IsChecked; }
+	        set { EnableQuickModeCheckBox.IsChecked = value; }
+        }
+        
+        public bool EnableRankInGameShow
+        {
+	        get { return (bool)EnableRankInGameShowCheckBox.IsChecked; }
+	        set { EnableRankInGameShowCheckBox.IsChecked = value; }
+        }
+        
+        public bool EnableCardState
+        {
+	        get { return (bool)EnableCardStateCheckBox.IsChecked; }
+	        set { EnableCardStateCheckBox.IsChecked = value; }
+        }
+        
         //显示日志
         private static int logCnt = 0;
 		private void ShowLog(object sender, EventArgs e)
@@ -458,6 +456,9 @@ namespace HearthHelper
 							//先检测炉石进程是否存在
 							if (UtilsProcess.IsRunning(CurrRunningAccount.StonePid))
 							{
+								// 检查HsMod配置
+								UtilsHsModChange.CheckHsModChange(HsModPort, EnableGMMessageShow, EnableEnemyEmote,
+									EnableQuickMode, EnableRankInGameShow, EnableCardState);
 								//再检测日志时间
 								if (CurrRunningAccount.currItem.Mode == (int)GameMode.ModeNormal)
 								{
@@ -625,9 +626,7 @@ namespace HearthHelper
 							ref IsRunning, NeedMultStone, NeedCloseBattle,
 							ForceCloseBattle, needHang, BattleNetPath, BNHSInterval,
 							WindowWidth, WindowHeight,
-                            EnableHsMod, HsModPort,
-							EnableTimeGear, NoFightTime,
-							PveFightTime, PvpFightTime);
+                            EnableHsMod, HsModPort);
 						if (!IsRunning)
 						{
 							UtilsCom.Log($"用户主动停止运行，终止后续启动");
@@ -761,24 +760,49 @@ namespace HearthHelper
 			e.Handled = true;
 		}
 
-        //账号统计信息查看
-        private void ConfigAddAccountButton_Click(object sender, RoutedEventArgs e)
+        //修改账号token
+        private void ConfigChangeAccountToken_Click(object sender, RoutedEventArgs e)
         {
-			try
-			{
-				Rsa.AddUser();
-				UtilsCom.Log("批量注册学习账号成功");
-			}
-			catch 
-			{
-                UtilsCom.Log("请检查学习配置文件");
-            }
+	        System.Windows.Controls.Button button = sender as System.Windows.Controls.Button;
+	        if (button != null)
+	        {
+		        string account = "";
+		        string token = "";
+		        AccountPopupChange accountConfigPopup = new AccountPopupChange(AccountList);
+		        accountConfigPopup.Left = Left + (Width - accountConfigPopup.Width) / 2.0;
+		        accountConfigPopup.Top = Top + (Height - accountConfigPopup.Height) / 2.0;
+		        if ((bool)accountConfigPopup.ShowDialog())
+		        {
+			        account = accountConfigPopup.GetAccount();
+			        token = accountConfigPopup.GetToken();
+		        }
+
+		        accountConfigPopup.Close();
+		        if (!string.IsNullOrEmpty(account))
+		        {
+			        var accountItemWhole = AccountList.ToList().Find(acc => acc.Email == account);
+			        if (accountItemWhole == null)
+			        {
+				        return;
+			        }
+
+			        accountItemWhole.Token = token;
+			        if (string.IsNullOrEmpty(token))
+			        {
+				        UtilsAccount.ChangeLoginAccount(AccountList, CurrRunningAccount.Email);
+				        UtilsCom.Delay(500);
+				        UtilsProcess.StopHearthstone(CurrRunningAccount, false, true, true);
+				        UtilsCom.Delay(2000);
+				        UtilsProcess.StartBattleNet(BattleNetPath);
+			        }
+		        }
+	        }
         }
 
         //账号统计信息查看
         private void ConfigAccountButtonView_Click(object sender, RoutedEventArgs e)
 		{
-            if (CurrRunningAccount.Running && EnableHsMod)
+            if (CurrRunningAccount.Running)
 			{
 				Process.Start(string.Format($"http://localhost:{HsModPort}"));
 			}
@@ -799,23 +823,42 @@ namespace HearthHelper
 				if (button != null)
 				{
 					string newAccount = "";
+					string token = "";
 					AccountPopupAdd accountConfigPopup = new AccountPopupAdd();
 					accountConfigPopup.Left = Left + (Width - accountConfigPopup.Width) / 2.0;
 					accountConfigPopup.Top = Top + (Height - accountConfigPopup.Height) / 2.0;
 					if ((bool)accountConfigPopup.ShowDialog())
 					{
 						newAccount = accountConfigPopup.GetAccount();
+						token = accountConfigPopup.GetToken();
 					}
 					accountConfigPopup.Close();
 					if (!string.IsNullOrEmpty(newAccount))
 					{
-						if (UtilsAccount.AddLoginAccount(AccountList, newAccount))
+						var accountItemWhole = AccountList.ToList().Find(acc => acc.Email == newAccount);
+						if (accountItemWhole == null)
 						{
-							AccountList.Insert(0, new AccountItemWhole(false, newAccount));
+							if (UtilsAccount.AddLoginAccount(AccountList, newAccount))
+							{
+								accountItemWhole = new AccountItemWhole(false, newAccount);
+							}
+						}
+
+						if (accountItemWhole == null)
+						{
+							return;
+						}
+
+						accountItemWhole.Token = token;
+						if (string.IsNullOrEmpty(token))
+						{
+							UtilsAccount.ChangeLoginAccount(AccountList, CurrRunningAccount.Email);
+							UtilsCom.Delay(500);
 							UtilsProcess.StopHearthstone(CurrRunningAccount, false, true, true);
 							UtilsCom.Delay(2000);
 							UtilsProcess.StartBattleNet(BattleNetPath);
 						}
+						
 					}
 				}
 			}
@@ -869,7 +912,6 @@ namespace HearthHelper
 						File.Delete(System.IO.Path.Combine(path, "doorstop_config.ini"));
 						File.Delete(System.IO.Path.Combine(path, "winhttp.dll"));
 						UtilsCopy.DeleteDirectory(System.IO.Path.Combine(path, "BepInEx"));
-						UtilsCopy.DeleteDirectory(System.IO.Path.Combine(path, "unstripped_corlib"));
 						UtilsCom.Log("HsMod卸载成功，如需继续使用，请点击“安装HsMod”");
 					}
 					catch { UtilsCom.Log("HsMod卸载失败，请检查权限"); }
@@ -933,16 +975,16 @@ namespace HearthHelper
 		{
             //写入配置文件
             UtilsConfig.WriteConfig(AccountList,
-                BattleNetPath, HearthstonePath,
-                HearthbuddyPath, PushPlusToken,
-                BNHSInterval, HSHBInterval, CheckInterval,
-                RebootCntMax, PushNormalInterval, SystemVersion,
-                WindowWidth, WindowHeight,
-                NeedCloseBattle, NeedMultStone,
-                NeedPushMessage, NeedPushNormal,
-                EnableHsMod, HsModPort,
-				EnableTimeGear, NoFightTime,
-				PveFightTime, PvpFightTime);
+	            BattleNetPath, HearthstonePath,
+	            HearthbuddyPath, PushPlusToken,
+	            BNHSInterval, HSHBInterval, CheckInterval,
+	            RebootCntMax, PushNormalInterval, SystemVersion,
+	            WindowWidth, WindowHeight,
+	            NeedCloseBattle, NeedMultStone,
+	            NeedPushMessage, NeedPushNormal,
+	            EnableHsMod, HsModPort,
+	            EnableGMMessageShow, EnableEnemyEmote,
+	            EnableQuickMode, EnableRankInGameShow, EnableCardState);
 
             //HsMod插件
             /*
@@ -1042,8 +1084,9 @@ namespace HearthHelper
 			bool _NeedCloseBattle = false; bool _NeedMultStone = false;
 			bool _NeedPushMessage = false; bool _NeedPushNormal = false;
 			bool _EnableHsMod = false; int _HsModPort = 58744;
-			bool _EnableTimeGear = false; int _NoFightTime=2;
-            int _PveFightTime=4; int _PvpFightTime=1;
+			bool _EnableGMMessageShow = false; bool _EnableEnemyEmote= false;
+			bool _EnableQuickMode = false; bool _EnableRankInGameShow= false;
+			bool _EnableCardState = false;
             UtilsConfig.ReadConfig(ref _AccountList,
 				ref _BattleNetPath, ref _HearthstonePath,
 				ref _HearthbuddyPath, ref _PushPlusToken,
@@ -1053,8 +1096,9 @@ namespace HearthHelper
 				ref _NeedCloseBattle, ref _NeedMultStone,
 				ref _NeedPushMessage, ref _NeedPushNormal,
                 ref _EnableHsMod, ref _HsModPort,
-                ref _EnableTimeGear, ref _NoFightTime,
-                ref _PveFightTime, ref _PvpFightTime);
+                ref _EnableGMMessageShow, ref _EnableEnemyEmote,
+                ref _EnableQuickMode, ref _EnableRankInGameShow,
+                ref _EnableCardState);
 			AccountList = _AccountList;
 			BattleNetPath = _BattleNetPath; HearthstonePath = _HearthstonePath;
 			HearthbuddyPath = _HearthbuddyPath; PushPlusToken = _PushPlusToken;
@@ -1065,9 +1109,10 @@ namespace HearthHelper
 			WindowWidth = _WindowWidth; WindowHeight = _WindowHeight;
 			NeedCloseBattle = _NeedCloseBattle; NeedMultStone = _NeedMultStone;
 			NeedPushMessage = _NeedPushMessage; NeedPushNormal = _NeedPushNormal;
-            EnableHsMod = _EnableHsMod; HsModPort = _HsModPort;
-            EnableTimeGear = _EnableTimeGear; NoFightTime = _NoFightTime;
-            PveFightTime = _PveFightTime; PvpFightTime = _PvpFightTime;
+            HsModPort = _HsModPort;
+            EnableGMMessageShow = _EnableGMMessageShow; EnableEnemyEmote = _EnableEnemyEmote;
+            EnableQuickMode = _EnableQuickMode; EnableRankInGameShow = _EnableRankInGameShow;
+            EnableCardState = _EnableCardState;
             AccountListBox.ItemsSource = AccountList;
 
 			//检测日志路径
@@ -1141,13 +1186,6 @@ namespace HearthHelper
             NeedMultStoneCheckBox.IsEnabled = false;
             NeedPushMessageCheckBox.IsEnabled = false;
             NeedPushNormalCheckBox.IsEnabled = false;
-            PatchStoneButton0.IsEnabled = false;
-            PatchStoneButton1.IsEnabled = false;
-            PatchStoneButton2.IsEnabled = false;
-            PatchStoneButton3.IsEnabled = false;
-            PatchStoneButton4.IsEnabled = false;
-            PatchStoneButton5.IsEnabled = false;
-            PatchStoneButton6.IsEnabled = false;
             AddAccountButton.IsEnabled = false;
             /*
             EnableHsModCheckBox.IsEnabled = false;
@@ -1190,13 +1228,6 @@ namespace HearthHelper
             NeedMultStoneCheckBox.IsEnabled = true;
             NeedPushMessageCheckBox.IsEnabled = true;
             NeedPushNormalCheckBox.IsEnabled = true;
-            PatchStoneButton0.IsEnabled = true;
-            PatchStoneButton1.IsEnabled = true;
-            PatchStoneButton2.IsEnabled = true;
-            PatchStoneButton3.IsEnabled = true;
-            PatchStoneButton4.IsEnabled = true;
-            PatchStoneButton5.IsEnabled = true;
-            PatchStoneButton6.IsEnabled = true;
             AddAccountButton.IsEnabled = true;
             /*
 			EnableHsModCheckBox.IsEnabled = true;
@@ -1255,6 +1286,10 @@ namespace HearthHelper
 
                 //保存配置文件
                 ConfigSave();
+                
+                // 比对HsMod
+                UtilsCopy.CopyMercFileToHearthPath(HearthstonePath);
+                UtilsCom.Log("HsMod安装成功");
 
                 //开始运行
                 IsRunning = true;

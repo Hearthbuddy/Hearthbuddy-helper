@@ -79,19 +79,19 @@
                 <StackPanel
 					Orientation="Horizontal">
                 <Button
-					Name="AddAccountButton"
-					Content="批量注册学习账号"
-					VerticalAlignment="Center"
-					Margin="10,0,0,0"
-					Width="115"
-					IsEnabled="True" Click="ConfigAddAccountButton_Click" />
-                <Button
 					Name="ConfigAccountButtonView"
 					Content="查看挂机账号统计信息"
                     VerticalAlignment="Center"
 					Margin="10,0,0,0"
 					Width="135"
-					IsEnabled="False" Click="ConfigAccountButtonView_Click" />
+					IsEnabled="True" Click="ConfigAccountButtonView_Click" />
+                <Button
+	                Name="AddAccountButton"
+	                Content="修改账号token"
+	                VerticalAlignment="Center"
+	                Margin="10,0,0,0"
+	                Width="115"
+	                IsEnabled="True" Click="ConfigChangeAccountToken_Click" />
                 <Button
 					Name="ConfigAccountButtonAdd"
 					Content="添加账号"
@@ -140,7 +140,7 @@
 		</GroupBox>
         <GroupBox
 			Header="其他配置（尽量使用默认参数，避免配置错误）"
-			Height="205"
+			Height="180"
 			VerticalAlignment="Top"
 			Margin="10,270,10,0">
             <Grid>
@@ -371,78 +371,14 @@
 							Width="40"
 							Click="TestPushMessageButton_Click" />
                     </StackPanel>
-                    <StackPanel
-						Orientation="Horizontal"
-						VerticalAlignment="Center">
-                        <Label
-                            Margin="0,5,0,0"
-							Content="补丁:" />
-                        <Button
-							Name="PatchStoneButton0"
-							Content="备份文件"
-							VerticalAlignment="Center"
-							Margin="1,5,0,0"
-							Width="52"
-							ToolTipService.ToolTip="备份Assembly-CSharp.dll和libacsdk_x86.dll文件"
-							Click="PatchStoneButton0_Click" />
-                        <Button
-							Name="PatchStoneButton1"
-							Content="最小化"
-							VerticalAlignment="Center"
-							Margin="3,5,0,0"
-							Width="40"
-							ToolTipService.ToolTip="解除炉石窗口最小化限制"
-							Click="PatchStoneButton1_Click" />
-                        <Button
-							Name="PatchStoneButton2"
-							Content="反作弊"
-							VerticalAlignment="Center"
-							Margin="3,5,0,0"
-							Width="40"
-							ToolTipService.ToolTip="屏蔽炉石检测作弊插件启动"
-							Click="PatchStoneButton2_Click" />
-                        <Button
-							Name="PatchStoneButton3"
-							Content="去广告"
-							VerticalAlignment="Center"
-							Margin="3,5,0,0"
-							Width="40"
-							ToolTipService.ToolTip="去除炉石经常推送的商城广告"
-							Click="PatchStoneButton3_Click" />
-                        <Button
-							Name="PatchStoneButton4"
-							Content="免开门"
-							VerticalAlignment="Center"
-							Margin="3,5,0,0"
-							Width="40"
-							ToolTipService.ToolTip="免除中国特有的炉石开门（使用插件版本佣兵时，禁止打此补丁）"
-							Click="PatchStoneButton4_Click"
-							IsEnabled="True" />
-                        <Button
-							Name="PatchStoneButton5"
-							Content="去特效"
-							VerticalAlignment="Center"
-							Margin="3,5,0,0"
-							Width="40"
-							ToolTipService.ToolTip="去除炉石金卡特效，提高云服务器挂机性能"
-							Click="PatchStoneButton5_Click" />
-                        <Button
-							Name="PatchStoneButton6"
-							Content="还原文件"
-							VerticalAlignment="Center"
-							Margin="3,5,0,0"
-							Width="52"
-							ToolTipService.ToolTip="还原Assembly-CSharp.dll和libacsdk_x86.dll文件"
-							Click="PatchStoneButton6_Click" />
-                    </StackPanel>
                 </StackPanel>
             </Grid>
         </GroupBox>
         <GroupBox
-			Header="HsMod配置（当前不开放，与补丁冲突，补丁和HsMod二选一）"
-			Height="75"
+			Header="HsMod配置（必须安装，最新反作弊依赖HsMod）"
+			Height="95"
 			VerticalAlignment="Top"
-			Margin="10,480,10,0">
+			Margin="10,455,10,0">
             <StackPanel
 				Orientation="Vertical">
                 <StackPanel
@@ -453,7 +389,7 @@
 						Margin="5,0,0,0"
                         VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
 						Content="启用HsMod"
-						IsEnabled="False" IsChecked="False" />
+						IsEnabled="False" IsChecked="True" />
 					<Label 
 						Margin="10,0,0,0"
 						VerticalAlignment="Center"
@@ -464,52 +400,58 @@
                         VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                         HorizontalAlignment="Center"
                         Width="50" Height="20"
-						IsEnabled="False" VerticalAlignment="Center"/>
+						IsEnabled="True" VerticalAlignment="Center"/>
                     <Button
 						Name="CopyBepButton"
 						Content="安装HsMod"
 						VerticalAlignment="Center"
 						Margin="10,0,0,0"
 						Width="75"
-						IsEnabled="False" Click="CopyBepButton_Click" />
+						IsEnabled="True" Click="CopyBepButton_Click" />
                     <Button
 						Name="DeleteBepButton"
 						Content="卸载HsMod"
 						VerticalAlignment="Center"
 						Margin="10,0,0,0"
 						Width="75"
-						IsEnabled="False" Click="DeleteBepButton_Click" />
+						IsEnabled="True" Click="DeleteBepButton_Click" />
                 </StackPanel>
                 <StackPanel
 					Orientation="Horizontal"
 					VerticalAlignment="Center">
                     <CheckBox 
-                        Name="EnableTimeGearCheckBox"
-                        Margin="5,0,0,0" Width="70" Height="20"
+                        Name="EnableGMMessageShowCheckBox"
+                        Margin="5,0,0,0" Width="248" Height="20"
 						VerticalAlignment="Center" VerticalContentAlignment="Center"
-						IsEnabled="False" HorizontalAlignment="Center" Content="启用齿轮" IsChecked="False" />
-                    <Label Margin="5,0,0,0" Width="82" 
-						VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                        Content="非战斗时倍速" />
-                    <TextBox 
-                        Name="NoFightTimeTextBox"
-                        Margin="1,0,0,0" Width="25" Height="20"
-						IsEnabled="False" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-                    <Label Margin="3,0,0,0" Width="57"
-						VerticalAlignment="Center" VerticalContentAlignment="Center"
-						HorizontalAlignment="Center" Content="PVE倍速" />
-                    <TextBox 
-                        Name="PveFightTimeTextBox"
-                        Margin="1,0,0,0" Width="25" Height="20"
-						IsEnabled="False" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-                    <Label Margin="3,0,0,0" Width="57"
-						VerticalAlignment="Center" VerticalContentAlignment="Center"
-						HorizontalAlignment="Center" Content="PVP倍速" />
-                    <TextBox 
-                        Name="PvpFightTimeTextBox"
-                        Margin="1,0,0,0" Width="25" Height="20"
-						IsEnabled="False" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+						IsEnabled
+						="True" HorizontalAlignment="Center" Content="移除削弱补丁、提示广告、天梯结算等弹窗" IsChecked="False" />
+                    <CheckBox 
+	                    Name="EnableEnemyEmoteCheckBox"
+	                    Margin="5,0,0,0" Width="100" Height="20"
+	                    VerticalAlignment="Center" VerticalContentAlignment="Center"
+	                    IsEnabled
+	                    ="True" HorizontalAlignment="Center" Content="屏蔽对手表情" IsChecked="False" />
                 </StackPanel>
+	            <StackPanel
+		            Orientation="Horizontal"
+		            VerticalAlignment="Center">
+		            <CheckBox 
+			            Name="EnableQuickModeCheckBox"
+			            Margin="5,0,0,0" Width="128" Height="20"
+			            VerticalAlignment="Center" VerticalContentAlignment="Center"
+			            IsEnabled="True" HorizontalAlignment="Center" Content="快速战斗(酒馆/佣兵)" IsChecked="False" />
+		            <CheckBox 
+			            Name="EnableRankInGameShowCheckBox"
+			            Margin="5,0,0,0" Width="116" Height="20"
+			            VerticalAlignment="Center" VerticalContentAlignment="Center"
+			            IsEnabled="True" HorizontalAlignment="Center" Content="显示对手天梯等级" IsChecked="False" />
+		            <CheckBox 
+			            Name="EnableCardStateCheckBox"
+			            Margin="5,0,0,0" Width="93" Height="20"
+			            VerticalAlignment="Center" VerticalContentAlignment="Center"
+			            IsEnabled="True" HorizontalAlignment="Center" Content="禁用卡牌特效" IsChecked="False" />
+	            </StackPanel>
+	            
             </StackPanel>
         </GroupBox>
         <Button

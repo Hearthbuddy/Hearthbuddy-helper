@@ -1,0 +1,31 @@
+<Window
+    x:Class="HearthHelper.AccountPopupChange" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Name="AccountPopup" ResizeMode="NoResize" Title="修改账号token" Height="160" Width="260">
+    <StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Margin="10,0,0,0"
+                   Content="邮箱/手机：" VerticalAlignment="Center" Width="Auto" />
+            <ComboBox Grid.Row="0" Grid.Column="1" Name="ConfigAccountName" Width="120" Height="20"
+                      VerticalContentAlignment="Center" HorizontalAlignment="Stretch"
+                      SelectionChanged="ConfigAccountNameSelectionChanged" />
+            <Label Grid.Row="1" Grid.Column="0" Margin="10,0,0,0"
+                   Content="Token(非必须):" VerticalAlignment="Center" Width="Auto" />
+            <TextBox Grid.Row="1" Grid.Column="1" Width="120" Height="20"
+                     Name="ConfigToken" IsReadOnly="False"
+                     VerticalContentAlignment="Center" HorizontalAlignment="Stretch" />
+        </Grid>
+        <Button Name="ConfigAccountButtonChange" Content="立即修改"
+                HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                Margin="10,12,10,0" Width="210" Height="23" Click="ConfigItemButtonChange_Click" />
+    </StackPanel>
+</Window>

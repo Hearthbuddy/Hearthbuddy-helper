@@ -7,6 +7,7 @@ namespace HearthHelper
 	{
 		private bool selected;
 		private string email;
+		private string token;
 		private string emailShow;
 		private bool running;
 		private int stonePid;
@@ -45,6 +46,12 @@ namespace HearthHelper
 				email = value; OnPropertyChanged("Email");
 				EmailShow = UtilsCom.ReplaceWithSpecialChar(value);
 			}
+		}
+		
+		public string Token
+		{
+			get { return token; }
+			set { token = value; OnPropertyChanged("Token"); }
 		}
 		public string EmailShow
 		{

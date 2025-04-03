@@ -32,8 +32,9 @@ namespace HearthHelper
 			ref bool NeedCloseBattle, ref bool NeedMultStone,
 			ref bool NeedPushMessage,ref bool NeedPushNormal,
             ref bool EnableHsMod, ref int HsModPort,
-			ref bool EnableTimeGear, ref int NoFightTime,
-			ref int PveFightTime, ref int PvpFightTime)
+			ref bool _EnableGMMessageShow, ref bool _EnableEnemyEmote,
+			ref bool _EnableQuickMode, ref bool _EnableRankInGameShow,
+			ref bool _EnableCardState)
 		{
 			//加载xml配置文件
 			UtilsXml util = new UtilsXml("Settings/Default/HearthHelper.xml");
@@ -133,42 +134,43 @@ namespace HearthHelper
 				WindowHeight = DefaultWindowHeight;
 				UtilsCom.Log($"读取数据错误，恢复默认值={DefaultWindowHeight}");
 			}
-            try { EnableHsMod = bool.Parse(util.Read("EnableHsMod")); }
-            catch
-            {
-                EnableHsMod = false;
-                UtilsCom.Log($"读取数据错误，恢复默认值={false}");
-            }
             try { HsModPort = int.Parse(util.Read("HsModPort")); }
             catch
             {
                 HsModPort = DefaultHsModPort;
                 UtilsCom.Log($"读取数据错误，恢复默认值={DefaultHsModPort}");
             }
-            try { EnableTimeGear = bool.Parse(util.Read("EnableTimeGear")); }
+            try { _EnableGMMessageShow = bool.Parse(util.Read("EnableGMMessageShow")); }
             catch
             {
-                EnableTimeGear = false;
+	            _EnableGMMessageShow = false;
                 UtilsCom.Log($"读取数据错误，恢复默认值={false}");
             }
-            try { NoFightTime = int.Parse(util.Read("NoFightTime")); }
+            try { _EnableEnemyEmote = bool.Parse(util.Read("EnableEnemyEmote")); }
             catch
             {
-                NoFightTime = DefaultNoFightTime;
-                UtilsCom.Log($"读取数据错误，恢复默认值={DefaultNoFightTime}");
+	            _EnableEnemyEmote = false;
+	            UtilsCom.Log($"读取数据错误，恢复默认值={false}");
             }
-            try { PveFightTime = int.Parse(util.Read("PveFightTime")); }
+            try { _EnableQuickMode = bool.Parse(util.Read("EnableQuickMode")); }
             catch
             {
-                PveFightTime = DefaultPveFightTime;
-                UtilsCom.Log($"读取数据错误，恢复默认值={DefaultPveFightTime}");
+	            _EnableQuickMode = false;
+	            UtilsCom.Log($"读取数据错误，恢复默认值={false}");
             }
-            try { PvpFightTime = int.Parse(util.Read("PvpFightTime")); }
+            try { _EnableRankInGameShow = bool.Parse(util.Read("EnableRankInGameShow")); }
             catch
             {
-                PvpFightTime = DefaultPvpFightTime;
-                UtilsCom.Log($"读取数据错误，恢复默认值={DefaultPvpFightTime}");
+	            _EnableRankInGameShow = false;
+	            UtilsCom.Log($"读取数据错误，恢复默认值={false}");
             }
+            try { _EnableCardState = bool.Parse(util.Read("EnableCardState")); }
+            catch
+            {
+	            _EnableCardState = false;
+	            UtilsCom.Log($"读取数据错误，恢复默认值={false}");
+            }
+            
             //读取战网账号配置
             string path = UtilsPath.GetBattleConfig();
 			try
@@ -206,6 +208,12 @@ namespace HearthHelper
 						"HASH" + accountCheckedItem.Email.GetHashCode().ToString(),
 						"Selected"
 					}));
+					accountCheckedItem.Token = util.Read(new string[]
+					{
+						"BattleNetAccount",
+						"HASH" + accountCheckedItem.Email.GetHashCode().ToString(),
+						"Token"
+					});
 					int i = 0;
 					for ( ; ; )
 					{
@@ -364,15 +372,15 @@ namespace HearthHelper
 		public static void WriteConfig(
 			ObservableCollection<AccountItemWhole> AccountList,
 			string BattleNetPath, string HearthstonePath,
-			string HearthbuddyPath,string PushPlusToken,
+			string HearthbuddyPath, string PushPlusToken,
 			int BNHSInterval, int HSHBInterval, int CheckInterval,
 			int RebootCntMax, int PushNormalInterval, int SystemVersion,
 			int WindowWidth, int WindowHeight,
 			bool NeedCloseBattle, bool NeedMultStone,
 			bool NeedPushMessage, bool NeedPushNormal,
-            bool EnableHsMod, int HsModPort,
-            bool EnableTimeGear, int NoFightTime,
-            int PveFightTime, int PvpFightTime)
+			bool EnableHsMod, int HsModPort,
+			bool EnableGMMessageShow, bool EnableEnemyEmote,
+			bool EnableQuickMode, bool EnableRankInGameShow, bool EnableCardState)
 		{
 			try
 			{
@@ -394,12 +402,12 @@ namespace HearthHelper
 				util.Write(NeedMultStone.ToString(), "NeedMultStone");
 				util.Write(NeedPushMessage.ToString(), "NeedPushMessage");
 				util.Write(NeedPushNormal.ToString(), "NeedPushNormal");
-                util.Write(EnableHsMod.ToString(), "EnableHsMod");
                 util.Write(HsModPort.ToString(), "HsModPort");
-                util.Write(EnableTimeGear.ToString(), "EnableTimeGear");
-                util.Write(NoFightTime.ToString(), "NoFightTime");
-                util.Write(PveFightTime.ToString(), "PveFightTime");
-                util.Write(PvpFightTime.ToString(), "PvpFightTime");
+                util.Write(EnableGMMessageShow.ToString(), "EnableGMMessageShow");
+                util.Write(EnableEnemyEmote.ToString(), "EnableEnemyEmote");
+                util.Write(EnableQuickMode.ToString(), "EnableQuickMode");
+                util.Write(EnableRankInGameShow.ToString(), "EnableRankInGameShow");
+                util.Write(EnableCardState.ToString(), "EnableCardState");
 				foreach (AccountItemWhole accountCheckedItem in AccountList)
 				{
 					util.Write(accountCheckedItem.Selected.ToString(), new string[]
@@ -407,6 +415,12 @@ namespace HearthHelper
 						"BattleNetAccount",
 						"HASH" + accountCheckedItem.Email.GetHashCode().ToString(),
 						"Selected"
+					});
+					util.Write(accountCheckedItem.Token, new string[]
+					{
+						"BattleNetAccount",
+						"HASH" + accountCheckedItem.Email.GetHashCode().ToString(),
+						"Token"
 					});
 					int i = 0;
 					foreach (AccountItemSingle single in accountCheckedItem.itemList)
