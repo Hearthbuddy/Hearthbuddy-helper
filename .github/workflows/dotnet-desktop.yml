@@ -1,0 +1,86 @@
+name: .NET Core Desktop
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest  # For a list of available runner types, refer to
+    # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+
+    env:
+      Solution_Name: myHelper.sln                            # Replace with your solution name, i.e. MyWpfApp.sln.
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          path: helper
+          
+      - name: Checkout HsMod
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          path: HsMod
+          repository: Pik-4/HsMod
+
+      # Install the .NET Core workload
+      - name: Install .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      
+      # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+      - name: Setup MSBuild.exe
+        uses: microsoft/setup-msbuild@v2
+      
+      # Build the application
+      - name: Build the application
+        run: |
+          cd helper
+          msbuild /p:Configuration=Release
+          
+          cd ../HsMod
+          msbuild /p:Configuration=Release
+          
+      - name: Artifacts
+        shell: bash
+        run: |
+          mkdir -p artifacts/HsMod
+          
+          download_url="https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.2/BepInEx_win_x86_5.4.23.2.zip"
+          echo "Downloading BepInEx ($download_url)..."
+          curl -L $download_url -o BepInEx.zip || { echo "Download failed"; exit 1; }
+          7z x BepInEx.zip -oartifacts/HsMod || { echo "Unzip failed"; exit 1; }
+          rm -rf BepInEx.zip
+          
+          mkdir artifacts/HsMod/BepInEx/unstripped_corlib
+          cp HsMod/HsMod/UnstrippedCorlib/* artifacts/HsMod/BepInEx/unstripped_corlib/
+          sed -i 's#dll_search_path_override =#dll_search_path_override = BepInEx\\unstripped_corlib#g' artifacts/HsMod/doorstop_config.ini
+          
+          mkdir artifacts/HsMod/BepInEx/plugins
+          cp HsMod/HsMod/Release/HsMod.dll artifacts/HsMod/BepInEx/plugins/
+          
+          cp helper/bin/Release/*.exe artifacts/
+          cd artifacts
+          7z a helper.zip .
+
+      - name: Upload to Release
+        uses: ncipollo/release-action@main
+        with:
+          tag: v1.0.0
+          artifacts: artifacts/helper.zip
+          allowUpdates: true
+          body: |
+            中控
+
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@main
+        with:
+          retain_days: 0
+          keep_minimum_runs: 1
