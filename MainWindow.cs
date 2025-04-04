@@ -1187,6 +1187,9 @@ namespace HearthHelper
             NeedPushMessageCheckBox.IsEnabled = false;
             NeedPushNormalCheckBox.IsEnabled = false;
             AddAccountButton.IsEnabled = false;
+            HsModPortTextBox.IsEnabled = false;
+            CopyBepButton.IsEnabled = false;
+            DeleteBepButton.IsEnabled = false;
             /*
             EnableHsModCheckBox.IsEnabled = false;
             HsModPortTextBox.IsEnabled = false;
@@ -1229,6 +1232,9 @@ namespace HearthHelper
             NeedPushMessageCheckBox.IsEnabled = true;
             NeedPushNormalCheckBox.IsEnabled = true;
             AddAccountButton.IsEnabled = true;
+            HsModPortTextBox.IsEnabled = true;
+            CopyBepButton.IsEnabled = true;
+            DeleteBepButton.IsEnabled = true;
             /*
 			EnableHsModCheckBox.IsEnabled = true;
             HsModPortTextBox.IsEnabled = true;
