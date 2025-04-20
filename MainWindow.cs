@@ -57,7 +57,7 @@ namespace HearthHelper
 		private int checkUpdateInterval = 1000*3600;
         private int killInterval = 60 * 1000;
         private const string MyVersion = "1.0.3";
-		private const string MyTitlt = "中控"+"--[2025-02-22]--";
+		private const string MyTitlt = "中控";
         public MainWindow()
 		{
 			WindowStartupLocation = WindowStartupLocation.CenterScreen;// 窗体居中
