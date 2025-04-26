@@ -836,24 +836,27 @@ namespace HearthHelper
 					if (!string.IsNullOrEmpty(newAccount))
 					{
 						var accountItemWhole = AccountList.ToList().Find(acc => acc.Email == newAccount);
-						if (accountItemWhole == null)
+						if (accountItemWhole != null)
 						{
-							if (UtilsAccount.AddLoginAccount(AccountList, newAccount))
-							{
-								accountItemWhole = new AccountItemWhole(false, newAccount);
-							}
+							UtilsCom.Log($"用户{UtilsCom.ReplaceWithSpecialChar(newAccount)}已存在");
+							return;
+						}
+						
+						if (UtilsAccount.AddLoginAccount(AccountList, newAccount))
+						{
+							accountItemWhole = new AccountItemWhole(false, newAccount);
 						}
 
 						if (accountItemWhole == null)
 						{
+							UtilsCom.Log($"用户{UtilsCom.ReplaceWithSpecialChar(newAccount)}添加失败");
 							return;
 						}
 
 						accountItemWhole.Token = token;
+						AccountList.Insert(0, accountItemWhole);
 						if (string.IsNullOrEmpty(token))
 						{
-							UtilsAccount.ChangeLoginAccount(AccountList, CurrRunningAccount.Email);
-							UtilsCom.Delay(500);
 							UtilsProcess.StopHearthstone(CurrRunningAccount, false, true, true);
 							UtilsCom.Delay(2000);
 							UtilsProcess.StartBattleNet(BattleNetPath);
