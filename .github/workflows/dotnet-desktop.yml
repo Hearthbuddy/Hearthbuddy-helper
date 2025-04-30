@@ -53,7 +53,7 @@ jobs:
         run: |
           mkdir -p artifacts/HsMod
           
-          download_url="https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.2/BepInEx_win_x86_5.4.23.2.zip"
+          download_url="https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.3/BepInEx_win_x86_5.4.23.3.zip"
           echo "Downloading BepInEx ($download_url)..."
           curl -L $download_url -o BepInEx.zip || { echo "Download failed"; exit 1; }
           7z x BepInEx.zip -oartifacts/HsMod || { echo "Unzip failed"; exit 1; }
